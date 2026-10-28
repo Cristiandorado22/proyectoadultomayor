@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juegos de memoria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+<main>
+
+  <!-- ========== MENÚ ========== -->
+  <section id="pantalla-menu" class="pantalla activa" aria-labelledby="t-menu">
+    <h1 id="t-menu">Elija un juego</h1>
+    <div class="menu-opciones">
+      <button type="button" class="tarjeta-juego juego-parejas" id="btn-abrir-parejas">
+        <span class="tarjeta-emoji" aria-hidden="true">🧠</span>
+        <span class="tarjeta-titulo">Juego de Parejas</span>
+        <span class="tarjeta-texto">Voltee las tarjetas y encuentre las imágenes iguales. Requiere iniciar sesión.</span>
+      </button>
+      <button type="button" class="tarjeta-juego juego-recuerdos" id="btn-abrir-recuerdos">
+        <span class="tarjeta-emoji" aria-hidden="true">🖼️</span>
+        <span class="tarjeta-titulo">Juego de Recuerdos</span>
+        <span class="tarjeta-texto">Mire cinco imágenes y cuente lo que recuerda. Requiere iniciar sesión.</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========== PAREJAS: DATOS DEL ADULTO MAYOR ========== -->
+  <section id="pantalla-datos-parejas" class="pantalla" aria-labelledby="t-datos-parejas">
+    <div class="barra-superior">
+      <button type="button" class="boton boton-gris boton-chico" data-volver-menu>← Menú de juegos</button>
+    </div>
+    <h1 id="t-datos-parejas">Juego de Parejas</h1>
+    <p class="subtitulo" id="datos-parejas-responsable"></p>
+
+    <form id="form-datos-parejas" class="formulario">
+      <label for="datos-parejas-paciente">Nombre del adulto mayor</label>
+      <input id="datos-parejas-paciente" name="paciente" type="text" required maxlength="100" autocomplete="off">
+
+      <p class="mensaje-error" id="datos-parejas-mensaje" role="alert"></p>
+      <p class="nota">Al terminar, se guardan los intentos y el tiempo de la partida.</p>
+
+      <button type="submit" class="boton boton-verde">Iniciar juego</button>
+      <button type="button" class="boton boton-azul" id="datos-parejas-historial">Ver partidas guardadas</button>
+      <button type="button" class="boton boton-gris" id="datos-parejas-salir">Cerrar sesión</button>
+    </form>
+  </section>
+
+  <!-- ========== JUEGO DE PAREJAS ========== -->
+  <section id="pantalla-parejas" class="pantalla" aria-labelledby="t-parejas">
+    <div class="barra-superior">
+      <button type="button" class="boton boton-gris boton-chico" id="parejas-cambiar">← Cambiar de adulto mayor</button>
+    </div>
+    <h1 id="t-parejas">Juego de Parejas</h1>
+    <p class="subtitulo" id="parejas-jugador">Encuentre las parejas</p>
+
+    <div class="info-parejas" role="status" aria-live="polite">
+      <span id="parejas-contador">Parejas: 0 / 4</span>
+      <span id="parejas-intentos">Intentos: 0</span>
+      <span id="parejas-mensaje">Seleccione una tarjeta</span>
+    </div>
+
+    <div id="tablero" class="tablero" aria-label="Tablero de tarjetas"></div>
+
+    <div class="fila-botones">
+      <button type="button" class="boton boton-azul" id="parejas-reiniciar">🔄 Reiniciar</button>
+      <button type="button" class="boton boton-gris" id="parejas-ayuda">💡 Ayuda</button>
+    </div>
+
+    <div id="parejas-victoria" class="aviso-exito" hidden>
+      <p><strong>¡Muy bien!</strong> Encontró todas las parejas en <span id="parejas-intentos-final">0</span> intentos
+        y <span id="parejas-tiempo-final">0:00</span> minutos.</p>
+      <p id="parejas-guardado" class="mensaje-error" role="status" aria-live="polite"></p>
+      <div class="fila-botones">
+        <button type="button" class="boton boton-gris" id="parejas-reintentar-guardado" hidden>Reintentar guardado</button>
+        <button type="button" class="boton boton-verde" id="parejas-otra">Jugar de nuevo</button>
+        <button type="button" class="boton boton-azul" id="parejas-ver-historial">Ver partidas guardadas</button>
+      </div>
+    </div>
+
+    <dialog id="dialogo-ayuda">
+      <h2>¿Cómo jugar?</h2>
+      <ol>
+        <li>Seleccione una tarjeta.</li>
+        <li>Observe la imagen.</li>
+        <li>Seleccione otra tarjeta.</li>
+        <li>Si son iguales, encontró una pareja.</li>
+        <li>Si son diferentes, inténtelo de nuevo.</li>
+      </ol>
+      <p>No hay límite de tiempo. ¡Juegue con calma!</p>
+      <button type="button" class="boton boton-azul" id="ayuda-cerrar">Entendido</button>
+    </dialog>
+  </section>
+
+  <!-- ========== RECUERDOS: INICIO DE SESIÓN ========== -->
+  <section id="pantalla-login" class="pantalla" aria-labelledby="t-login">
+    <div class="barra-superior">
+      <button type="button" class="boton boton-gris boton-chico" data-volver-menu>← Menú de juegos</button>
+    </div>
+    <h1 id="t-login">Iniciar sesión</h1>
+    <p class="subtitulo">Responsable o doctor</p>
+
+    <form id="form-login" class="formulario" autocomplete="on">
+      <label for="login-usuario">Usuario</label>
+      <input id="login-usuario" name="usuario" type="text" autocomplete="username" required maxlength="50">
+
+      <label for="login-password">Contraseña</label>
+      <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+
+      <p class="mensaje-error" id="login-mensaje" role="alert"></p>
+
+      <button type="submit" class="boton boton-azul">Iniciar sesión</button>
+      <button type="button" class="boton boton-gris" id="ir-registro">Crear cuenta nueva</button>
+    </form>
+  </section>
+
+  <!-- ========== RECUERDOS: REGISTRO ========== -->
+  <section id="pantalla-registro" class="pantalla" aria-labelledby="t-registro">
+    <h1 id="t-registro">Crear cuenta nueva</h1>
+
+    <form id="form-registro" class="formulario" autocomplete="off">
+      <label for="reg-nombre">Nombre del responsable o doctor</label>
+      <input id="reg-nombre" name="nombreResponsable" type="text" required maxlength="100">
+
+      <label for="reg-usuario">Usuario</label>
+      <input id="reg-usuario" name="usuario" type="text" autocomplete="username" required maxlength="50">
+
+      <label for="reg-password">Contraseña (mínimo 4 caracteres)</label>
+      <input id="reg-password" name="password" type="password" autocomplete="new-password" required>
+
+      <label for="reg-confirmar">Confirmar contraseña</label>
+      <input id="reg-confirmar" name="confirmar" type="password" autocomplete="new-password" required>
+
+      <p class="mensaje-error" id="registro-mensaje" role="alert"></p>
+
+      <button type="submit" class="boton boton-verde">Registrar</button>
+      <button type="button" class="boton boton-gris" id="registro-volver">Volver</button>
+    </form>
+  </section>
+
+  <!-- ========== RECUERDOS: DATOS DEL ADULTO MAYOR ========== -->
+  <section id="pantalla-datos" class="pantalla" aria-labelledby="t-datos">
+    <div class="barra-superior">
+      <button type="button" class="boton boton-gris boton-chico" data-volver-menu>← Menú de juegos</button>
+    </div>
+    <h1 id="t-datos">Datos del adulto mayor</h1>
+    <p class="subtitulo" id="datos-responsable"></p>
+
+    <form id="form-datos" class="formulario">
+      <label for="datos-paciente">Nombre del adulto mayor</label>
+      <input id="datos-paciente" name="paciente" type="text" required maxlength="100" autocomplete="off">
+
+      <p class="mensaje-error" id="datos-mensaje" role="alert"></p>
+      <p class="nota">Se mostrarán 5 imágenes al azar. El adulto mayor podrá escribir o decir lo que ve o recuerda de cada una.</p>
+
+      <button type="submit" class="boton boton-verde" id="datos-iniciar">Iniciar juego</button>
+      <button type="button" class="boton boton-azul" id="datos-historial">Ver partidas guardadas</button>
+      <button type="button" class="boton boton-gris" id="datos-salir">Cerrar sesión</button>
+    </form>
+  </section>
+
+  <!-- ========== RECUERDOS: CUENTA REGRESIVA ========== -->
+  <section id="pantalla-cronometro" class="pantalla pantalla-centrada" aria-labelledby="t-crono">
+    <h1 id="t-crono">El juego va a comenzar…</h1>
+    <p id="cronometro" class="cronometro" role="timer" aria-live="polite">5</p>
+  </section>
+
+  <!-- ========== RECUERDOS: IMAGEN Y RESPUESTA ========== -->
+  <section id="pantalla-imagen" class="pantalla" aria-labelledby="imagen-contador">
+    <h1 id="imagen-contador" class="contador-imagen">Imagen 1 de 5</h1>
+
+    <div class="marco-imagen">
+      <img id="imagen-actual" alt="Imagen para recordar">
+    </div>
+
+    <label for="imagen-respuesta" class="etiqueta-respuesta">
+      Escriba lo que ve o recuerda de la imagen, o presione el micrófono para responder hablando.
+    </label>
+    <textarea id="imagen-respuesta" rows="4" maxlength="2000"></textarea>
+
+    <div class="fila-botones">
+      <button type="button" class="boton boton-naranja" id="btn-microfono">🎤 Grabar respuesta</button>
+    </div>
+    <p class="estado-grabacion" id="estado-grabacion" role="status" aria-live="polite"></p>
+
+    <p class="mensaje-error" id="imagen-mensaje" role="alert"></p>
+    <div class="fila-botones">
+      <button type="button" class="boton boton-azul" id="btn-siguiente">Siguiente</button>
+    </div>
+  </section>
+
+  <!-- ========== RECUERDOS: FINAL ========== -->
+  <section id="pantalla-final" class="pantalla pantalla-centrada" aria-labelledby="t-final">
+    <h1 id="t-final">¡Muy bien!<br>Ha terminado el Juego de Recuerdos.</h1>
+    <p id="final-mensaje" class="subtitulo"></p>
+    <div class="fila-botones">
+      <button type="button" class="boton boton-verde" id="final-nueva">Nueva partida</button>
+      <button type="button" class="boton boton-azul" id="final-historial">Ver partidas guardadas</button>
+      <button type="button" class="boton boton-gris" id="final-salir">Cerrar sesión</button>
+    </div>
+  </section>
+
+  <!-- ========== RECUERDOS: HISTORIAL ========== -->
+  <section id="pantalla-historial" class="pantalla" aria-labelledby="t-historial">
+    <div class="barra-superior">
+      <button type="button" class="boton boton-gris boton-chico" id="historial-volver">← Volver</button>
+    </div>
+    <h1 id="t-historial">Partidas guardadas</h1>
+    <p class="mensaje-error" id="historial-mensaje" role="alert"></p>
+    <ul id="historial-lista" class="lista-partidas"></ul>
+    <div id="historial-detalle" class="detalle-partida" hidden></div>
+  </section>
+
+  <!-- ========== PAREJAS: HISTORIAL ========== -->
+  <section id="pantalla-historial-parejas" class="pantalla" aria-labelledby="t-historial-parejas">
+    <div class="barra-superior">
+      <button type="button" class="boton boton-gris boton-chico" id="historial-parejas-volver">← Volver</button>
+    </div>
+    <h1 id="t-historial-parejas">Partidas de Parejas</h1>
+    <p class="mensaje-error" id="historial-parejas-mensaje" role="alert"></p>
+    <div class="tabla-contenedor">
+      <table class="tabla-parejas" id="historial-parejas-tabla" hidden>
+        <thead>
+          <tr><th scope="col">Adulto mayor</th><th scope="col">Fecha</th><th scope="col">Intentos</th><th scope="col">Tiempo</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
